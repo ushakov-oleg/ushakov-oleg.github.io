@@ -429,13 +429,14 @@ body {
   padding-left: 1.5625rem;
 }
 
-.banner__right-img {
+.banner__right-wrapper-img {
   -webkit-box-flex: 1;
       -ms-flex: 1 2 28.125rem;
           flex: 1 2 28.125rem;
+  height: 100%;
 }
 
-.banner__right-img img {
+.banner__right-img {
   width: 100%;
   height: -webkit-fill-available;
   height: -moz-available;
