@@ -7,9 +7,9 @@
 	<meta name="format-detection" content="telephone=no">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Onest:wght@100..900&display=swap&_v=20260417140620" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Onest:wght@100..900&display=swap&_v=20260424182649" rel="stylesheet">
 	<!-- <style>body{opacity: 0;}</style> -->
-	<link rel="stylesheet" href="css/style.min.css?_v=20260417140620">
+	<link rel="stylesheet" href="css/style.min.css?_v=20260424182649">
 	<link rel="shortcut icon" href="favicon.ico">
 	<!-- <meta name="robots" content="noindex, nofollow"> -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,21 +48,105 @@
 				</div>
 			</div>
 		</header>
-		<main class="page" style="display: flex; justify-content: center; align-items: center;">
-			<ul style="display: flex; flex-direction: column; gap: 20px;">
-				<li style="display: inline-block;">
-					<a style="text-decoration: underline;" href="home.html">Небольшой брендбук</a>
-				</li>
-				<li style="display: inline-block;">
-					<a style="text-decoration: underline;" href="404.html">404 - Страница не найдена</a>
-				</li>
-				<li style="display: inline-block;">
-					<a style="text-decoration: underline;" href="505.html">505 - Внутренняя ошибка сервера</a>
-				</li>
-				<li style="display: inline-block;">
-					<a style="text-decoration: underline;" href="approve.html">Спасибо за вашу заявку!</a>
-				</li>
-			</ul>
+		<main class="page">
+			<section class="catalog-search">
+				<div class="catalog-search__container">
+					<div class="catalog-search__btn">
+						<a href="#" class="btn btn--small btn--more-primary icon _icon-tile">
+							<p>Каталог <span>товаров</span></p>
+						</a>
+					</div>
+					<div class="catalog-search__search">
+						<section class="search">
+							<form class="search__container">
+								<input type="text" placeholder="Поиск" class="search__input h5" name="q">
+								<button class="search__btn icon _icon-search"></button>
+							</form>
+						</section>
+					</div>
+				</div>
+			</section>
+
+			<section class="banner-text">
+				<div class="banner-text__container">
+					<h1 class="banner-text__title h1">Техника для офиса</h1>
+					<div class="banner-text__wrapper h5">
+						<p class="banner-text__text">
+							Российская компания «ГЕЛЕОС» производит и поставляет
+							профессиональное постпечатное оборудование
+							для эффективной работы и организации пространства.
+						</p>
+						<a href="#" class="banner-text__link h4">Смотреть</a>
+					</div>
+				</div>
+			</section>
+			<section class="banner">
+				<div class="banner__container h4">
+					<div class="banner__body">
+						<div class="banner__left">
+							<div class="banner__tags">
+								<div class="banner__tag">Минпромторг РФ</div>
+								<div class="banner__tag">ГИСП</div>
+							</div>
+							<h2 class="h1 banner__title">Уничтожители документов</h2>
+							<a href="#" class="banner__link">
+								<span class="banner__link-text">Узнать сейчас</span>
+								<span class="banner__link-icon icon _icon-arrow-up"></span>
+							</a>
+						</div>
+						<div class="banner__right">
+							<p class="banner__right-text h1">Серия МК</p>
+							<div class="banner__right-img">
+								<picture><source srcset="img/banner/benner.webp" type="image/webp"><img src="img/banner/benner.png" alt="Уничтожители документов"></picture>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<section class="catalog-menu">
+				<div class="catalog-menu__container h3">
+					<div class="catalog-menu__top-items">
+						<a href="#" class="catalog-menu__top-item">
+							<p class="catalog-menu__top-item-text">Уничтожители документов производства РФ</p>
+							<div class="catalog-menu__top-item-img">
+								<picture><source srcset="img/catalog-menu/item1.webp" type="image/webp"><img src="img/catalog-menu/item1.png" alt="Уничтожители документов"></picture>
+							</div>
+						</a>
+						<a href="#" class="catalog-menu__top-item">
+							<p class="catalog-menu__top-item-text">Уничтожители документов с автоподатчиком</p>
+							<div class="catalog-menu__top-item-img">
+								<picture><source srcset="img/catalog-menu/item2.webp" type="image/webp"><img src="img/catalog-menu/item2.png" alt="Уничтожители документов с автоподатчиком"></picture>
+							</div>
+						</a>
+					</div>
+					<div class="catalog-menu__items">
+						<a href="#" class="catalog-menu__item">
+							<p class="catalog-menu__item-text">Уничтожители документов</p>
+							<div class="catalog-menu__item-img">
+								<picture><source srcset="img/catalog-menu/item3.webp" type="image/webp"><img src="img/catalog-menu/item3.png" alt="Уничтожители документов"></picture>
+							</div>
+						</a>
+						<a href="#" class="catalog-menu__item">
+							<p class="catalog-menu__item-text">Пакетные ламинаторы</p>
+							<div class="catalog-menu__item-img">
+								<picture><source srcset="img/catalog-menu/item4.webp" type="image/webp"><img src="img/catalog-menu/item4.png" alt="Пакетные ламинаторы"></picture>
+							</div>
+						</a>
+						<a href="#" class="catalog-menu__item">
+							<p class="catalog-menu__item-text">Резаки</p>
+							<div class="catalog-menu__item-img">
+								<picture><source srcset="img/catalog-menu/item5.webp" type="image/webp"><img src="img/catalog-menu/item5.png" alt="Резаки"></picture>
+							</div>
+						</a>
+						<a href="#" class="catalog-menu__item">
+							<p class="catalog-menu__item-text">Переплетчики</p>
+							<div class="catalog-menu__item-img">
+								<picture><source srcset="img/catalog-menu/item6.webp" type="image/webp"><img src="img/catalog-menu/item6.png" alt="Переплетчики"></picture>
+							</div>
+						</a>
+					</div>
+				</div>
+			</section>
 		</main>
 		<footer class="footer">
 			<div class="footer__container">
@@ -162,17 +246,17 @@
 			</div>
 		</footer>
 	</div>
-	<!-- <div id="popup" aria-hidden="true" class="popup">
-	<div class="popup__wrapper">
-		<div class="popup__content">
-			<button data-close type="button" class="popup__close">Закрыть</button>
-			<div class="popup__text">
-				Text
+	<div id="popup" aria-hidden="true" class="popup">
+		<div class="popup__wrapper">
+			<div class="popup__content">
+				<button data-close type="button" class="popup__close">Закрыть</button>
+				<div class="popup__text">
+					Text
+				</div>
 			</div>
 		</div>
 	</div>
-</div> -->
-	<script src="js/app.min.js?_v=20260417140620"></script>
+	<script src="js/app.min.js?_v=20260424182649"></script>
 </body>
 
 </html>
