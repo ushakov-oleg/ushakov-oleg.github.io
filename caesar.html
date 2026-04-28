@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Шифры</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #eef2f7;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 680px;
+      background: #ffffff;
+      border: 1px solid #d7dee8;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(31, 41, 55, 0.12);
+    }
+
+    h1 {
+      margin: 0 0 20px;
+      font-size: 28px;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin: 14px 0 8px;
+      font-weight: 700;
+    }
+
+    textarea,
+    input,
+    select {
+      width: 100%;
+      border: 1px solid #b8c2d0;
+      border-radius: 6px;
+      font: inherit;
+      padding: 12px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    textarea:focus,
+    input:focus,
+    select:focus {
+      border-color: #2563eb;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    button {
+      min-height: 44px;
+      border: 0;
+      border-radius: 6px;
+      background: #2563eb;
+      color: #ffffff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    button.secondary {
+      background: #475569;
+    }
+
+    button.secondary:hover {
+      background: #334155;
+    }
+
+    .result {
+      background: #f8fafc;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .error {
+      min-height: 20px;
+      margin-top: 8px;
+      color: #b91c1c;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <h1>Шифры</h1>
+
+    <label for="method">Способ шифрования</label>
+    <select id="method">
+      <option value="caesar">Шифр Цезаря</option>
+      <option value="substitution">Шифр замены</option>
+    </select>
+
+    <label for="message">Сообщение</label>
+    <textarea id="message" placeholder="Введите текст"></textarea>
+
+    <div id="caesarSettings">
+      <label for="shift">Сдвиг</label>
+      <input id="shift" type="number" value="3">
+    </div>
+
+    <div id="substitutionSettings" class="hidden">
+      <label for="alphabet">Обычный алфавит</label>
+      <input id="alphabet" value="абвгдеёжзийклмнопрстуфхцчшщъыьэюя" readonly>
+
+      <label for="key">Алфавит замены</label>
+      <input id="key" value="яюэьыъщшчцхфутсрпонмлкйизжёедгвба">
+    </div>
+
+    <div id="error" class="error"></div>
+
+    <div class="buttons">
+      <button id="encode">Закодировать</button>
+      <button id="decode" class="secondary">Декодировать</button>
+    </div>
+
+    <label for="result">Результат</label>
+    <textarea id="result" class="result" readonly></textarea>
+  </main>
+
+  <script>
+    const method = document.getElementById("method");
+    const message = document.getElementById("message");
+    const shift = document.getElementById("shift");
+    const caesarSettings = document.getElementById("caesarSettings");
+    const substitutionSettings = document.getElementById("substitutionSettings");
+    const alphabetInput = document.getElementById("alphabet");
+    const keyInput = document.getElementById("key");
+    const error = document.getElementById("error");
+    const result = document.getElementById("result");
+    const encodeButton = document.getElementById("encode");
+    const decodeButton = document.getElementById("decode");
+
+    const alphabets = [
+      "abcdefghijklmnopqrstuvwxyz",
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+      "абвгдеёжзийклмнопрстуфхцчшщъыьэюя",
+      "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
+    ];
+
+    function moveCaesarLetter(letter, step) {
+      for (const alphabet of alphabets) {
+        const index = alphabet.indexOf(letter);
+
+        if (index !== -1) {
+          const length = alphabet.length;
+          const newIndex = ((index + step) % length + length) % length;
+          return alphabet[newIndex];
+        }
+      }
+
+      return letter;
+    }
+
+    function caesar(text, step) {
+      let answer = "";
+
+      for (const letter of text) {
+        answer += moveCaesarLetter(letter, step);
+      }
+
+      return answer;
+    }
+
+    function isUpperCase(letter) {
+      return letter === letter.toUpperCase() && letter !== letter.toLowerCase();
+    }
+
+    function normalizeKey(key) {
+      return key.toLowerCase().replace(/\s/g, "");
+    }
+
+    function checkKey(alphabet, key) {
+      if (key.length !== alphabet.length) {
+        return "В ключе должно быть 33 буквы.";
+      }
+
+      for (const letter of alphabet) {
+        if (!key.includes(letter)) {
+          return "В ключе должны быть все буквы русского алфавита.";
+        }
+      }
+
+      for (const letter of key) {
+        if (key.indexOf(letter) !== key.lastIndexOf(letter)) {
+          return "В ключе не должно быть повторяющихся букв.";
+        }
+      }
+
+      return "";
+    }
+
+    function substitution(text, fromAlphabet, toAlphabet) {
+      let answer = "";
+
+      for (const letter of text) {
+        const lowerLetter = letter.toLowerCase();
+        const index = fromAlphabet.indexOf(lowerLetter);
+
+        if (index === -1) {
+          answer += letter;
+        } else {
+          const newLetter = toAlphabet[index];
+          answer += isUpperCase(letter) ? newLetter.toUpperCase() : newLetter;
+        }
+      }
+
+      return answer;
+    }
+
+    function run(action) {
+      error.textContent = "";
+
+      if (method.value === "caesar") {
+        const step = Number(shift.value);
+        result.value = caesar(message.value, action === "encode" ? step : -step);
+        return;
+      }
+
+      const alphabet = alphabetInput.value;
+      const key = normalizeKey(keyInput.value);
+      const keyError = checkKey(alphabet, key);
+
+      if (keyError) {
+        error.textContent = keyError;
+        result.value = "";
+        return;
+      }
+
+      if (action === "encode") {
+        result.value = substitution(message.value, alphabet, key);
+      } else {
+        result.value = substitution(message.value, key, alphabet);
+      }
+    }
+
+    method.addEventListener("change", function () {
+      const isCaesar = method.value === "caesar";
+      caesarSettings.classList.toggle("hidden", !isCaesar);
+      substitutionSettings.classList.toggle("hidden", isCaesar);
+      error.textContent = "";
+      result.value = "";
+    });
+
+    encodeButton.addEventListener("click", function () {
+      run("encode");
+    });
+
+    decodeButton.addEventListener("click", function () {
+      run("decode");
+    });
+  </script>
+</body>
+</html>

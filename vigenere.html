@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Шифры Виженера и Атбаш</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Verdana, Arial, sans-serif;
+      background:
+        linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0 25%, transparent 25% 50%, rgba(251, 191, 36, 0.12) 50% 75%, transparent 75%),
+        #111318;
+      background-size: 34px 34px;
+      color: #f9fafb;
+      padding: 28px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 980px;
+      min-height: calc(100vh - 56px);
+      margin: 0 auto;
+      border: 2px solid #2dd4bf;
+      border-radius: 8px;
+      background: #171a21;
+      box-shadow: 12px 12px 0 #f59e0b;
+      overflow: hidden;
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 24px;
+      background: #20242d;
+      border-bottom: 2px solid #2dd4bf;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 30px;
+      letter-spacing: 0;
+    }
+
+    .badge {
+      border: 1px solid #f97316;
+      border-radius: 6px;
+      color: #fed7aa;
+      padding: 8px 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .panel {
+      padding: 24px;
+    }
+
+    .panel + .panel {
+      border-left: 2px solid #2dd4bf;
+      background: #13161c;
+    }
+
+    label {
+      display: block;
+      margin: 0 0 8px;
+      color: #99f6e4;
+      font-weight: 700;
+    }
+
+    textarea,
+    input,
+    select {
+      width: 100%;
+      border: 2px solid #374151;
+      border-radius: 6px;
+      background: #0f1117;
+      color: #f9fafb;
+      font: inherit;
+      padding: 13px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 210px;
+      resize: vertical;
+    }
+
+    input,
+    select {
+      margin-bottom: 18px;
+    }
+
+    textarea:focus,
+    input:focus,
+    select:focus {
+      border-color: #f59e0b;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    button {
+      min-height: 46px;
+      border: 0;
+      border-radius: 6px;
+      color: #111318;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    #encode {
+      background: #2dd4bf;
+    }
+
+    #encode:hover {
+      background: #5eead4;
+    }
+
+    #decode {
+      background: #f59e0b;
+    }
+
+    #decode:hover {
+      background: #fbbf24;
+    }
+
+    .result {
+      min-height: 314px;
+      background: #0b0d12;
+      border-color: #f97316;
+    }
+
+    .error {
+      min-height: 20px;
+      margin-top: 12px;
+      color: #fca5a5;
+      font-size: 14px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 760px) {
+      body {
+        padding: 16px;
+      }
+
+      .app {
+        min-height: calc(100vh - 32px);
+        box-shadow: 8px 8px 0 #f59e0b;
+      }
+
+      .top {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .content {
+        grid-template-columns: 1fr;
+      }
+
+      .panel + .panel {
+        border-top: 2px solid #2dd4bf;
+        border-left: 0;
+      }
+
+      .buttons {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="top">
+      <h1>Шифры</h1>
+      <div class="badge">VIGENERE + ATBASH</div>
+    </div>
+
+    <div class="content">
+      <section class="panel">
+        <label for="method">Метод</label>
+        <select id="method">
+          <option value="vigenere">Шифр Виженера</option>
+          <option value="atbash">Шифр Атбаш</option>
+        </select>
+
+        <label for="message">Сообщение</label>
+        <textarea id="message" placeholder="Введите текст"></textarea>
+
+        <div id="keyBlock">
+          <label for="key">Ключ</label>
+          <input id="key" value="ключ">
+        </div>
+
+        <div class="buttons">
+          <button id="encode">Закодировать</button>
+          <button id="decode">Декодировать</button>
+        </div>
+
+        <div id="error" class="error"></div>
+      </section>
+
+      <section class="panel">
+        <label for="result">Результат</label>
+        <textarea id="result" class="result" readonly></textarea>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const method = document.getElementById("method");
+    const message = document.getElementById("message");
+    const keyBlock = document.getElementById("keyBlock");
+    const keyInput = document.getElementById("key");
+    const result = document.getElementById("result");
+    const error = document.getElementById("error");
+    const encodeButton = document.getElementById("encode");
+    const decodeButton = document.getElementById("decode");
+
+    const russianAlphabet = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
+    const englishAlphabet = "abcdefghijklmnopqrstuvwxyz";
+
+    function getAlphabet(letter) {
+      const lowerLetter = letter.toLowerCase();
+
+      if (russianAlphabet.includes(lowerLetter)) {
+        return russianAlphabet;
+      }
+
+      if (englishAlphabet.includes(lowerLetter)) {
+        return englishAlphabet;
+      }
+
+      return "";
+    }
+
+    function isUpperCase(letter) {
+      return letter === letter.toUpperCase() && letter !== letter.toLowerCase();
+    }
+
+    function getKeyLetters(key) {
+      const letters = [];
+
+      for (const letter of key.toLowerCase()) {
+        if (getAlphabet(letter)) {
+          letters.push(letter);
+        }
+      }
+
+      return letters;
+    }
+
+    function getShift(keyLetter, alphabetLength) {
+      const alphabet = getAlphabet(keyLetter);
+      const shift = alphabet.indexOf(keyLetter);
+
+      return shift % alphabetLength;
+    }
+
+    function vigenere(text, key, mode) {
+      const keyLetters = getKeyLetters(key);
+      let answer = "";
+      let keyIndex = 0;
+
+      if (keyLetters.length === 0) {
+        error.textContent = "Введите ключ из букв.";
+        return "";
+      }
+
+      error.textContent = "";
+
+      for (const letter of text) {
+        const alphabet = getAlphabet(letter);
+
+        if (!alphabet) {
+          answer += letter;
+          continue;
+        }
+
+        const lowerLetter = letter.toLowerCase();
+        const index = alphabet.indexOf(lowerLetter);
+        const keyLetter = keyLetters[keyIndex % keyLetters.length];
+        let shift = getShift(keyLetter, alphabet.length);
+
+        if (mode === "decode") {
+          shift = -shift;
+        }
+
+        const newIndex = ((index + shift) % alphabet.length + alphabet.length) % alphabet.length;
+        const newLetter = alphabet[newIndex];
+
+        answer += isUpperCase(letter) ? newLetter.toUpperCase() : newLetter;
+        keyIndex++;
+      }
+
+      return answer;
+    }
+
+    function atbash(text) {
+      let answer = "";
+
+      for (const letter of text) {
+        const alphabet = getAlphabet(letter);
+
+        if (!alphabet) {
+          answer += letter;
+          continue;
+        }
+
+        const lowerLetter = letter.toLowerCase();
+        const index = alphabet.indexOf(lowerLetter);
+        const newLetter = alphabet[alphabet.length - 1 - index];
+
+        answer += isUpperCase(letter) ? newLetter.toUpperCase() : newLetter;
+      }
+
+      return answer;
+    }
+
+    function run(mode) {
+      error.textContent = "";
+
+      if (method.value === "atbash") {
+        result.value = atbash(message.value);
+        return;
+      }
+
+      result.value = vigenere(message.value, keyInput.value, mode);
+    }
+
+    method.addEventListener("change", function () {
+      keyBlock.classList.toggle("hidden", method.value === "atbash");
+      error.textContent = "";
+      result.value = "";
+    });
+
+    encodeButton.addEventListener("click", function () {
+      run("encode");
+    });
+
+    decodeButton.addEventListener("click", function () {
+      run("decode");
+    });
+  </script>
+</body>
+</html>
