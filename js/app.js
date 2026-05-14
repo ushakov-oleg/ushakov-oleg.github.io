@@ -63,7 +63,7 @@
             if (menuItem.querySelector(".menu__sublist") && menuItem.querySelector(".menu__link")) menuItem.querySelector(".menu__link").classList.add("_icon-arrow-menu");
             menuItem.addEventListener("click", function(e) {
                 if (this.querySelector(".menu__sublist")) {
-                    e.preventDefault();
+                    if (e.target == menuItem.querySelector(".menu__link")) e.preventDefault();
                     this.classList.toggle("sublist-active");
                 }
             });
@@ -3571,8 +3571,170 @@
             destroy
         });
     }
+    function Thumb({swiper, extendParams, on}) {
+        extendParams({
+            thumbs: {
+                swiper: null,
+                multipleActiveThumbs: true,
+                autoScrollOffset: 0,
+                slideThumbActiveClass: "swiper-slide-thumb-active",
+                thumbsContainerClass: "swiper-thumbs"
+            }
+        });
+        let initialized = false;
+        let swiperCreated = false;
+        swiper.thumbs = {
+            swiper: null
+        };
+        function isVirtualEnabled() {
+            const thumbsSwiper = swiper.thumbs.swiper;
+            if (!thumbsSwiper || thumbsSwiper.destroyed) return false;
+            return thumbsSwiper.params.virtual && thumbsSwiper.params.virtual.enabled;
+        }
+        function onThumbClick() {
+            const thumbsSwiper = swiper.thumbs.swiper;
+            if (!thumbsSwiper || thumbsSwiper.destroyed) return;
+            const clickedIndex = thumbsSwiper.clickedIndex;
+            const clickedSlide = thumbsSwiper.clickedSlide;
+            if (clickedSlide && clickedSlide.classList.contains(swiper.params.thumbs.slideThumbActiveClass)) return;
+            if (typeof clickedIndex === "undefined" || clickedIndex === null) return;
+            let slideToIndex;
+            if (thumbsSwiper.params.loop) slideToIndex = parseInt(thumbsSwiper.clickedSlide.getAttribute("data-swiper-slide-index"), 10); else slideToIndex = clickedIndex;
+            if (swiper.params.loop) swiper.slideToLoop(slideToIndex); else swiper.slideTo(slideToIndex);
+        }
+        function init() {
+            const {thumbs: thumbsParams} = swiper.params;
+            if (initialized) return false;
+            initialized = true;
+            const SwiperClass = swiper.constructor;
+            if (thumbsParams.swiper instanceof SwiperClass) {
+                if (thumbsParams.swiper.destroyed) {
+                    initialized = false;
+                    return false;
+                }
+                swiper.thumbs.swiper = thumbsParams.swiper;
+                Object.assign(swiper.thumbs.swiper.originalParams, {
+                    watchSlidesProgress: true,
+                    slideToClickedSlide: false
+                });
+                Object.assign(swiper.thumbs.swiper.params, {
+                    watchSlidesProgress: true,
+                    slideToClickedSlide: false
+                });
+                swiper.thumbs.swiper.update();
+            } else if (utils_isObject(thumbsParams.swiper)) {
+                const thumbsSwiperParams = Object.assign({}, thumbsParams.swiper);
+                Object.assign(thumbsSwiperParams, {
+                    watchSlidesProgress: true,
+                    slideToClickedSlide: false
+                });
+                swiper.thumbs.swiper = new SwiperClass(thumbsSwiperParams);
+                swiperCreated = true;
+            }
+            swiper.thumbs.swiper.el.classList.add(swiper.params.thumbs.thumbsContainerClass);
+            swiper.thumbs.swiper.on("tap", onThumbClick);
+            if (isVirtualEnabled()) swiper.thumbs.swiper.on("virtualUpdate", () => {
+                update(false, {
+                    autoScroll: false
+                });
+            });
+            return true;
+        }
+        function update(initial, p) {
+            const thumbsSwiper = swiper.thumbs.swiper;
+            if (!thumbsSwiper || thumbsSwiper.destroyed) return;
+            let thumbsToActivate = 1;
+            const thumbActiveClass = swiper.params.thumbs.slideThumbActiveClass;
+            if (swiper.params.slidesPerView > 1 && !swiper.params.centeredSlides) thumbsToActivate = swiper.params.slidesPerView;
+            if (!swiper.params.thumbs.multipleActiveThumbs) thumbsToActivate = 1;
+            thumbsToActivate = Math.floor(thumbsToActivate);
+            thumbsSwiper.slides.forEach(slideEl => slideEl.classList.remove(thumbActiveClass));
+            if (thumbsSwiper.params.loop || isVirtualEnabled()) for (let i = 0; i < thumbsToActivate; i += 1) elementChildren(thumbsSwiper.slidesEl, `[data-swiper-slide-index="${swiper.realIndex + i}"]`).forEach(slideEl => {
+                slideEl.classList.add(thumbActiveClass);
+            }); else for (let i = 0; i < thumbsToActivate; i += 1) if (thumbsSwiper.slides[swiper.realIndex + i]) thumbsSwiper.slides[swiper.realIndex + i].classList.add(thumbActiveClass);
+            if (p?.autoScroll ?? true) autoScroll(initial ? 0 : void 0);
+        }
+        function autoScroll(slideSpeed) {
+            const thumbsSwiper = swiper.thumbs.swiper;
+            if (!thumbsSwiper || thumbsSwiper.destroyed) return;
+            const slidesPerView = thumbsSwiper.params.slidesPerView === "auto" ? thumbsSwiper.slidesPerViewDynamic() : thumbsSwiper.params.slidesPerView;
+            const autoScrollOffset = swiper.params.thumbs.autoScrollOffset;
+            const useOffset = autoScrollOffset && !thumbsSwiper.params.loop;
+            if (swiper.realIndex !== thumbsSwiper.realIndex || useOffset) {
+                const currentThumbsIndex = thumbsSwiper.activeIndex;
+                let newThumbsIndex;
+                let direction;
+                if (thumbsSwiper.params.loop) {
+                    const newThumbsSlide = thumbsSwiper.slides.find(slideEl => slideEl.getAttribute("data-swiper-slide-index") === `${swiper.realIndex}`);
+                    newThumbsIndex = thumbsSwiper.slides.indexOf(newThumbsSlide);
+                    direction = swiper.activeIndex > swiper.previousIndex ? "next" : "prev";
+                } else {
+                    newThumbsIndex = swiper.realIndex;
+                    direction = newThumbsIndex > swiper.previousIndex ? "next" : "prev";
+                }
+                if (useOffset) newThumbsIndex += direction === "next" ? autoScrollOffset : -1 * autoScrollOffset;
+                if (thumbsSwiper.visibleSlidesIndexes && thumbsSwiper.visibleSlidesIndexes.indexOf(newThumbsIndex) < 0) {
+                    if (thumbsSwiper.params.centeredSlides) if (newThumbsIndex > currentThumbsIndex) newThumbsIndex = newThumbsIndex - Math.floor(slidesPerView / 2) + 1; else newThumbsIndex = newThumbsIndex + Math.floor(slidesPerView / 2) - 1; else if (newThumbsIndex > currentThumbsIndex && thumbsSwiper.params.slidesPerGroup === 1) ;
+                    thumbsSwiper.slideTo(newThumbsIndex, slideSpeed);
+                }
+            }
+        }
+        on("beforeInit", () => {
+            const {thumbs} = swiper.params;
+            if (!thumbs || !thumbs.swiper) return;
+            if (typeof thumbs.swiper === "string" || thumbs.swiper instanceof HTMLElement) {
+                const document = getDocument();
+                const getThumbsElementAndInit = () => {
+                    const thumbsElement = typeof thumbs.swiper === "string" ? document.querySelector(thumbs.swiper) : thumbs.swiper;
+                    if (thumbsElement && thumbsElement.swiper) {
+                        thumbs.swiper = thumbsElement.swiper;
+                        init();
+                        update(true);
+                    } else if (thumbsElement) {
+                        const eventName = `${swiper.params.eventsPrefix}init`;
+                        const onThumbsSwiper = e => {
+                            thumbs.swiper = e.detail[0];
+                            thumbsElement.removeEventListener(eventName, onThumbsSwiper);
+                            init();
+                            update(true);
+                            thumbs.swiper.update();
+                            swiper.update();
+                        };
+                        thumbsElement.addEventListener(eventName, onThumbsSwiper);
+                    }
+                    return thumbsElement;
+                };
+                const watchForThumbsToAppear = () => {
+                    if (swiper.destroyed) return;
+                    const thumbsElement = getThumbsElementAndInit();
+                    if (!thumbsElement) requestAnimationFrame(watchForThumbsToAppear);
+                };
+                requestAnimationFrame(watchForThumbsToAppear);
+            } else {
+                init();
+                update(true);
+            }
+        });
+        on("slideChange update resize observerUpdate", () => {
+            update();
+        });
+        on("setTransition", (_s, duration) => {
+            const thumbsSwiper = swiper.thumbs.swiper;
+            if (!thumbsSwiper || thumbsSwiper.destroyed) return;
+            thumbsSwiper.setTransition(duration);
+        });
+        on("beforeDestroy", () => {
+            const thumbsSwiper = swiper.thumbs.swiper;
+            if (!thumbsSwiper || thumbsSwiper.destroyed) return;
+            if (swiperCreated) thumbsSwiper.destroy();
+        });
+        Object.assign(swiper.thumbs, {
+            init,
+            update
+        });
+    }
     function initSliders() {
-        if (document.querySelector(".swiper")) new Swiper(".swiper", {
+        if (document.querySelector(".swiper-index")) new Swiper(".swiper-index", {
             modules: [ Navigation, Pagination ],
             observer: true,
             observeParents: true,
@@ -3590,6 +3752,29 @@
             },
             on: {}
         });
+        if (document.querySelector(".catalog-detail-swiper1") && document.querySelector(".catalog-detail-swiper2")) {
+            var swiper = new Swiper(".catalog-detail-swiper2", {
+                spaceBetween: 10,
+                slidesPerView: 2,
+                watchSlidesProgress: true,
+                freeMode: true
+            });
+            new Swiper(".catalog-detail-swiper1", {
+                modules: [ Pagination, Navigation, Thumb ],
+                spaceBetween: 10,
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev"
+                },
+                thumbs: {
+                    swiper
+                }
+            });
+        }
     }
     window.addEventListener("load", function(e) {
         initSliders();
@@ -3606,4 +3791,70 @@
     window["FLS"] = true;
     isWebp();
     menuInit();
+    const properties = document.querySelector(".js-catalog-filter__properteis");
+    if (properties) {
+        let propertiesCheckboxLabel = properties.querySelectorAll(".catalog-filter__property--checkbox label");
+        if (propertiesCheckboxLabel.length > 0) propertiesCheckboxLabel.forEach(item => {
+            let checkbox = item.querySelector('input[type="checkbox"]');
+            if (checkbox) checkbox.addEventListener("change", function() {
+                let checkboxVisible = item.querySelector(".catalog-filter__property-checkbox");
+                if (this.checked) checkboxVisible.classList.add("active"); else checkboxVisible.classList.remove("active");
+            });
+        });
+        let propertiesCheckboxSingle = properties.querySelectorAll(".catalog-filter__property-toggle");
+        if (propertiesCheckboxSingle.length > 0) propertiesCheckboxSingle.forEach(item => {
+            let checkbox = item.querySelector('input[type="checkbox"]');
+            if (checkbox) checkbox.addEventListener("change", function() {
+                if (this.checked) item.classList.add("active"); else item.classList.remove("active");
+            });
+        });
+        let propertiesCheckbox = properties.querySelectorAll(".catalog-filter__property--checkbox");
+        if (propertiesCheckbox.length > 0) propertiesCheckbox.forEach(item => {
+            let propertyCheckboxName = item.querySelector(".catalog-filter__property-name");
+            if (propertyCheckboxName) propertyCheckboxName.addEventListener("click", function() {
+                item.classList.toggle("active");
+            });
+        });
+    }
+    const filterBtn = document.querySelector(".js-catalog-filter-btn");
+    let filterPopup = document.querySelector(".js-catalog-filter__body");
+    if (filterBtn && filterPopup) {
+        filterBtn.addEventListener("click", function() {
+            filterPopup.classList.add("active");
+        });
+        filterPopup.addEventListener("click", function(e) {
+            console.log(e.target);
+            if (e.target === filterPopup) filterPopup.classList.remove("active");
+        });
+        let btnFilterClose = document.querySelector(".js-catalog-filter__btn-modile");
+        if (btnFilterClose) btnFilterClose.addEventListener("click", function() {
+            filterPopup.classList.remove("active");
+        });
+    }
+    if (document.querySelectorAll(".catalog-filter__property--range").length > 0) document.querySelectorAll(".catalog-filter__property--range").forEach(rangeWrapper => {
+        const range = rangeWrapper.querySelector("#range");
+        const currentValue = rangeWrapper.querySelector(".catalog-filter__range-current");
+        const slider = rangeWrapper.querySelector(".catalog-filter__property-body");
+        let labels = slider.querySelectorAll("label");
+        console.log(labels);
+        const updateRange = () => {
+            const min = Number(range.min);
+            const max = Number(range.max);
+            const value = Number(range.value);
+            const ratio = (value - min) / (max - min);
+            const progress = ratio * 100;
+            slider.style.setProperty("--progress", `${progress}%`);
+            slider.style.setProperty("--progress-ratio", ratio);
+            currentValue.textContent = value;
+            if (ratio >= .85) labels.forEach(item => {
+                if (item.dataset.range == 1) item.style.visibility = "hidden";
+            }); else if (ratio <= .1) labels.forEach(item => {
+                if (item.dataset.range == 0) item.style.visibility = "hidden";
+            }); else labels.forEach(item => {
+                item.style.visibility = "visible";
+            });
+        };
+        updateRange();
+        range.addEventListener("input", updateRange);
+    });
 })();

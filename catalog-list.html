@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<title>Каталог</title>
+	<meta charset="UTF-8">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Onest:wght@100..900&display=swap&_v=20260514113707" rel="stylesheet">
+	<!-- <style>body{opacity: 0;}</style> -->
+	<link rel="stylesheet" href="css/style.min.css?_v=20260514113707">
+	<link rel="shortcut icon" href="favicon.ico">
+	<!-- <meta name="robots" content="noindex, nofollow"> -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+	<div class="wrapper">
+		<header class="header">
+			<div class="header__container">
+				<div class="header__logo">
+					<a href="/" class="header__logo-link">
+						<picture><source srcset="img/logo/geleous.webp" type="image/webp"><img src="img/logo/geleous.png" alt="Гелеос" class="header__logo-img"></picture>
+					</a>
+					<div class="header__menu menu">
+						<button type="button" class="menu__icon icon-menu"><span></span></button>
+						<nav class="menu__body">
+							<ul class="menu__list">
+								<li class="menu__item">
+									<a href="" class="menu__link">О компании</a>
+									<ul class="menu__sublist">
+										<li class="menu__subitem"><a href="/partners.html" class="menu__sublink h3">Партнерам</a></li>
+										<li class="menu__subitem"><a href="/cooperation.html" class="menu__sublink h3">Сотрудничество</a></li>
+										<li class="menu__subitem"><a href="" class="menu__sublink h3">Документация</a></li>
+										<li class="menu__subitem"><a href="" class="menu__sublink h3">Поддержка</a></li>
+										<li class="menu__subitem"><a href="/history.html" class="menu__sublink h3">История компании</a></li>
+									</ul>
+								</li>
+								<li class="menu__item"><a href="/partners.html" class="menu__link">Партнерам</a></li>
+								<li class="menu__item"><a href="/cooperation.html" class="menu__link">Сотрудничество</a></li>
+								<li class="menu__item"><a href="" class="menu__link">Документация</a></li>
+								<li class="menu__item"><a href="/partners.html" class="menu__link">Поддержка</a></li>
+								<li class="menu__item"><a href="" class="menu__link menu__link--btn btn">Поддержка</a></li>
+							</ul>
+						</nav>
+					</div>
+					<a href="#" class="header__btn btn">Отправить запрос</a>
+				</div>
+			</div>
+		</header>
+		<main class="page catalog-list-page">
+			<section class="breadcrumbs">
+				<div class="breadcrumbs__container">
+					<ul class="breadcrumbs__list">
+						<li class="breadcrumbs__item">
+							<a href="/" class="breadcrumbs__link">Главная</a>
+						</li>
+						<li class="breadcrumbs__item">
+							<a class="breadcrumbs__link">Каталог</a>
+						</li>
+					</ul>
+				</div>
+			</section>
+			<section class="banner-text">
+				<div class="banner-text__container">
+					<h1 class="banner-text__title h1">Техника для офиса</h1>
+					<div class="banner-text__wrapper h5">
+						<p class="banner-text__text">
+							Российская компания «ГЕЛЕОС» производит и поставляет
+							профессиональное постпечатное оборудование
+							для эффективной работы и организации пространства.
+						</p>
+					</div>
+				</div>
+			</section>
+			<section class="catalog-list-main">
+				<div class="catalog-list-main__container">
+					<div class="catalog-list-main__body">
+						<section class="catalog-list-main__filter catalog-filter">
+							<button class="catalog-filter__btn-mobile btn btn--small _icon-filter js-catalog-filter-btn">Все фильтры</button>
+							<button class="catalog-filter__btn-current-mobile btn btn--more-primary icon _icon-fill-arrow">Производство РФ</button>
+							<button class="catalog-filter__btn-current-mobile btn btn--more-primary icon _icon-fill-arrow">Сегмент применения</button>
+							<button class="catalog-filter__btn-current-mobile btn btn--more-primary icon _icon-fill-arrow">Степень секретности</button>
+
+							<div class="catalog-filter__body js-catalog-filter__body">
+								<ul class="catalog-filter__properteis h5 js-catalog-filter__properteis">
+									<p class="catalog-filter__title-mobile">Фильтр</p>
+									<li class="catalog-filter__property catalog-filter__property--toggle">
+										<p class="catalog-filter__property-name h3">Производство РФ</p>
+										<div class="catalog-filter__property-body">
+											<label class="catalog-filter__property-toggle" for="property01">
+												<input type="checkbox" id="property01" name="property01">
+												<span></span>
+											</label>
+										</div>
+									</li>
+									<li class="catalog-filter__property catalog-filter__property--checkbox">
+										<p class="catalog-filter__property-name h3 _icon-arrow-menu">Сегмент применения</p>
+										<div class="catalog-filter__property-body">
+											<label>
+												<input type="checkbox" name="property1">
+												<span class="catalog-filter__property-checkbox">
+													<span class="catalog-filter__property-checkbox--active"></span>
+												</span>
+												<p>Персональные</p>
+											</label>
+											<label>
+												<input type="checkbox" name="property1">
+												<span class="catalog-filter__property-checkbox">
+													<span class="catalog-filter__property-checkbox--active"></span>
+												</span>
+												<p>Малый офис</p>
+											</label>
+											<label>
+												<input type="checkbox" name="property1">
+												<span class="catalog-filter__property-checkbox">
+													<span class="catalog-filter__property-checkbox--active"></span>
+												</span>
+												<p>Средний офис</p>
+											</label>
+											<label>
+												<input type="checkbox" name="property1">
+												<span class="catalog-filter__property-checkbox">
+													<span class="catalog-filter__property-checkbox--active"></span>
+												</span>
+												<p>Большой офис</p>
+											</label>
+										</div>
+									</li>
+									<li class="catalog-filter__property catalog-filter__property--range">
+										<p class="catalog-filter__property-name h3">Емкость корзины, литров</p>
+										<div class="catalog-filter__property-body">
+											<nav>
+												<label data-range="0" for="range">10</label>
+												<label data-range="1" for="range">350</label>
+											</nav>
+											<span class="catalog-filter__range-current">10</span>
+											<input type="range" id="range" name="property2" min="10" max="350" />
+										</div>
+									</li>
+									<button type="button" class="catalog-filter__btn-modile js-catalog-filter__btn-modile btn btn--small btn--more-primary">Готово</button>
+								</ul>
+							</div>
+						</section>
+						<section class="catalog-list-main__right">
+							<div class="catalog-list-main__right-top">
+								<div class="catalog-list-main__search catalog-list-search">
+									<form class="catalog-list-search__body h5">
+										<input type="text" class="catalog-list-search__input" placeholder="Поиск">
+										<button type="submit" class="catalog-list-search__btn btn btn--more-primary">Найти</button>
+									</form>
+								</div>
+								<div class="catalog-list-main__order-sort catalog-order-sort">
+									<div class="catalog-order-sort__body h4">
+										<select name="order" class="catalog-order-sort__select">
+											<option selected value="order1" class="catalog-order-sort__option">По умолчанию</option>
+											<option value="order2" class="catalog-order-sort__option">По возрастанию</option>
+											<option value="order3" class="catalog-order-sort__option">По уменьшению</option>
+											<option value="order4" class="catalog-order-sort__option">По популярности</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="catalog-list-main__right-body">
+								<section class="catalog-list-main__items catalog-list-items">
+									<div class="catalog-list-items__body">
+										<div class="catalog-list-items__items">
+											<a href="catalog-detail.html" class="catalog-list-items__item item">
+												<div class="item__body">
+													<div class="item__top">
+														<div class="item__properteis">
+															<div class="item__property item__property--twoText">
+																<span>6</span>
+																<span>лист</span>
+															</div>
+															<div class="item__property item__property--biggerText">
+																<span>p-7</span>
+															</div>
+															<div class="item__property item__property--smallText">
+																<span>авто-подача</span>
+															</div>
+														</div>
+													</div>
+													<div class="item__buttom">
+														<p class="item__title h3">МК50-7+</p>
+														<p class="item_desc h5">Уничтожитель документов</p>
+													</div>
+												</div>
+											</a>
+											<a href="catalog-detail.html" class="catalog-list-items__item item">
+												<div class="item__body">
+													<div class="item__top">
+														<div class="item__properteis">
+															<div class="item__property item__property--twoText">
+																<span>6</span>
+																<span>лист</span>
+															</div>
+															<div class="item__property item__property--biggerText">
+																<span>p-7</span>
+															</div>
+															<div class="item__property item__property--smallText">
+																<span>авто-подача</span>
+															</div>
+														</div>
+													</div>
+													<div class="item__buttom">
+														<p class="item__title h3">МК50-7+</p>
+														<p class="item_desc h5">Уничтожитель документов</p>
+
+														<div class="item__properteis item__properteis--mobile">
+															<div class="item__property item__property--twoText">
+																<span>6</span>
+																<span>лист</span>
+															</div>
+															<div class="item__property item__property--biggerText">
+																<span>p-7</span>
+															</div>
+															<div class="item__property item__property--smallText">
+																<span>авто-подача</span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</a>
+											<a href="catalog-detail.html" class="catalog-list-items__item item">
+												<div class="item__body">
+													<div class="item__top">
+														<div class="item__properteis">
+															<div class="item__property item__property--twoText">
+																<span>6</span>
+																<span>лист</span>
+															</div>
+															<div class="item__property item__property--biggerText">
+																<span>p-7</span>
+															</div>
+															<div class="item__property item__property--smallText">
+																<span>авто-подача</span>
+															</div>
+														</div>
+													</div>
+													<div class="item__buttom">
+														<p class="item__title h3">МК50-7+</p>
+														<p class="item_desc h5">Уничтожитель документов</p>
+													</div>
+												</div>
+											</a>
+											<a href="catalog-detail.html" class="catalog-list-items__item item">
+												<div class="item__body">
+													<div class="item__top">
+														<div class="item__properteis">
+															<div class="item__property item__property--twoText">
+																<span>6</span>
+																<span>лист</span>
+															</div>
+															<div class="item__property item__property--biggerText">
+																<span>p-7</span>
+															</div>
+															<div class="item__property item__property--smallText">
+																<span>авто-подача</span>
+															</div>
+														</div>
+													</div>
+													<div class="item__buttom">
+														<p class="item__title h3">МК50-7+</p>
+														<p class="item_desc h5">Уничтожитель документов</p>
+													</div>
+												</div>
+											</a>
+											<a href="catalog-detail.html" class="catalog-list-items__item catalog-list-items__item--hidden item">
+
+											</a>
+											<a href="catalog-detail.html" class="catalog-list-items__item catalog-list-items__item--hidden item">
+
+											</a>
+										</div>
+									</div>
+								</section>
+							</div>
+						</section>
+					</div>
+				</div>
+			</section>
+		</main>
+		<footer class="footer">
+			<div class="footer__container">
+				<div class="footer__top">
+					<div class="footer__top-left">
+						<a href="/" class="footer__logo">
+							<picture><source srcset="img/logo/geleous.webp" type="image/webp"><img src="img/logo/geleous.png" alt="Гелеос" class="footer__logo-img"></picture>
+						</a>
+						<div class="footer__description">
+							<p>
+								Розничная и оптовая продажа оборудования
+								и расходных материалов производства РФ
+							</p>
+						</div>
+					</div>
+					<div class="footer__top-right">
+						<div class="footer__row">
+							<div class="footer__column footer__column--contacts">
+								<div class="footer__column-item">
+									<h3 class="footer__column-title h3">Контакты</h3>
+									<ul class="footer__list">
+										<li class="footer__list-item">
+											<a href="tel:+78005553535" class="footer__link _icon-phone">+7 (800) 555-35-35</a>
+										</li>
+										<li class="footer__list-item">
+											<a href="mailto:info@geleous.ru" class="footer__link _icon-mail">info@geleous.ru</a>
+										</li>
+									</ul>
+								</div>
+								<div class="footer__column-item">
+									<h3 class="footer__column-title h3">Адрес</h3>
+									<ul class="footer__list">
+										<li class="footer__list-item">
+											<p class="footer__text">
+												Россия, Московская область, <br>
+												г.Балашиха, микрорайон Янтарный, <br>
+												Молодёжный бульвар, 8, офис 3 <br>
+											</p>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="footer__column footer__column--catalog">
+								<div class="footer__column-item">
+									<h3 class="footer__column-title h3">Каталог</h3>
+									<ul class="footer__list">
+										<li class="footer__list-item">
+											<a href="" class="footer__link">Уничтожители документов</a>
+										</li>
+										<li class="footer__list-item">
+											<a href="" class="footer__link">Ламинаторы</a>
+										</li>
+										<li class="footer__list-item">
+											<a href="" class="footer__link">Брошюровщики</a>
+										</li>
+										<li class="footer__list-item">
+											<a href="" class="footer__link">Резаки для бумаги</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="footer__column footer__column--support">
+								<div class="footer__column-item">
+									<h3 class="footer__column-title h3">Поддержка</h3>
+									<ul class="footer__list">
+										<li class="footer__list-item">
+											<a href="" class="footer__link">Сервисная служба</a>
+										</li>
+										<li class="footer__list-item">
+											<a href="" class="footer__link">Инструкции</a>
+										</li>
+									</ul>
+								</div>
+								<div class="footer__column-item">
+									<h3 class="footer__column-title h3">Партнерам</h3>
+									<ul class="footer__list">
+										<li class="footer__list-item">
+											<a href="" class="footer__link">Программа лояльности</a>
+										</li>
+										<li class="footer__list-item">
+											<a href="" class="footer__link">Новинки</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="footer__bottom">
+					<div class="footer__copyright">
+						<p>2026 @ Гелеос</p>
+					</div>
+					<a href="" class="footer__wrapper-icon">
+						<span class="footer__icon _icon-instagram"></span>
+					</a>
+				</div>
+			</div>
+		</footer>
+	</div>
+	<!-- <div id="popup" aria-hidden="true" class="popup">
+	<div class="popup__wrapper">
+		<div class="popup__content">
+			<button data-close type="button" class="popup__close">Закрыть</button>
+			<div class="popup__text">
+				Text
+			</div>
+		</div>
+	</div>
+</div> -->
+	<script src="js/app.min.js?_v=20260514113707"></script>
+</body>
+
+</html>
